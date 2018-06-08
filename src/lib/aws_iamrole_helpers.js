@@ -24,9 +24,7 @@ const instantiateRoleSession = (roleARN, sessionName, options = null) => {
   console.log('Instantiating Role Session', roleARN, sessionName, options)
   const updateConfigForOptions = (opt) => {
     if (!isNullOrUndefined(options)) {
-      AWS.config.update({
-        region: options.region
-      })
+      AWS.config.update(options)
     }
   }
 
