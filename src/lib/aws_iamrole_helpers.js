@@ -20,7 +20,7 @@ const isNullOrUndefined = (d) => {
  * @param sessionName The name of the session that will be allocated. This is arbitrary.
  * @param options This can include any other options for your session. Ex. "region"
  */
-const instantiateRoleSession = (roleARN, sessionName, options = null) => {
+const createRoleSession = (roleARN, sessionName, options = null) => {
   console.log('Instantiating Role Session', roleARN, sessionName, options)
   const updateConfigForOptions = (opt) => {
     if (!isNullOrUndefined(options)) {
@@ -62,6 +62,6 @@ const isRoleSessionActive = () => {
 }
 
 module.exports = {
-  instantiateRoleSession: instantiateRoleSession,
+  createRoleSession: createRoleSession,
   isRoleSessionActive: isRoleSessionActive
 }

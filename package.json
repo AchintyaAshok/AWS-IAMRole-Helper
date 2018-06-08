@@ -2,7 +2,7 @@
   "name": "aws-role-helper",
   "version": "1.0.0",
   "description": "This helps you deal with IAM Roles easily and have a continued credentialed session without resorting to custom code.",
-  "main": "index.js",
+  "main": "src/lib/aws_iamrolehelpers.js",
   "scripts": {
     "test": "npm test"
   },
