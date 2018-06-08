@@ -3,7 +3,8 @@ This project builds off of the AWS SDK and makes it easier for you to instantiat
 
 Instantiate Your Role Session:
 ```javascript
-createRoleSession(your_role_ARN, session_name)
+const AWSRoleHelper = require('aws-iamrole-helper')
+AWSRoleHelper.createRoleSession(your_role_ARN, session_name)
   .then(() => {
     // do your work here to query the SDK
   })
