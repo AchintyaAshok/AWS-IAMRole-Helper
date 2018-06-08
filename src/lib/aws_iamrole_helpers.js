@@ -20,7 +20,19 @@ const isNullOrUndefined = (d) => {
  * @param sessionName The name of the session that will be allocated. This is arbitrary.
  * @param options This can include any other options for your session. Ex. "region"
  */
-const instantiateRoleSession = (roleARN, sessionName, options) => {
+const instantiateRoleSession = (roleARN, sessionName, options = null) => {
+  console.log('Instantiating Role Session', roleARN, sessionName, options)
+  const updateConfigForOptions = (opt) => {
+    if (!isNullOrUndefined(options)) {
+      AWS.config.update({
+        region: options.region
+      })
+    }
+  }
+
+  // Update the AWS config for the provided options
+  updateConfigForOptions(options)
+
   if (isNullOrUndefined(session)) {
     return new Promise((resolve, reject) => {
       session = new AWS.STS()
@@ -28,12 +40,13 @@ const instantiateRoleSession = (roleARN, sessionName, options) => {
         RoleArn: roleARN,
         RoleSessionName: sessionName
       }).promise().then((data) => {
-        console.log(data)
         AWS.config.update({
           accessKeyId: data.Credentials.AccessKeyId,
           secretAccessKey: data.Credentials.SecretAccessKey,
           sessionToken: data.Credentials.SessionToken
         })
+
+        resolve(session)
       }).catch(e => {
         reject(e)
       })
