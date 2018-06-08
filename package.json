@@ -1,0 +1,28 @@
+{
+  "name": "aws-role-helper",
+  "version": "1.0.0",
+  "description": "This helps you deal with IAM Roles easily and have a continued credentialed session without resorting to custom code.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AchintyaAshok/AWS-IAMRole-Helper.git"
+  },
+  "keywords": [
+    "aws",
+    "node",
+    "sdk",
+    "javascript",
+    "iam",
+    "iamroles",
+    "helper"
+  ],
+  "author": "Achintya Ashok",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AchintyaAshok/AWS-IAMRole-Helper/issues"
+  },
+  "homepage": "https://github.com/AchintyaAshok/AWS-IAMRole-Helper#readme"
+}
