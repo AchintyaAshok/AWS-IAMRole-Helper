@@ -113,53 +113,6 @@ class AWSRoleSessionManager {
   }
 }
 
-// let session = null
-
-/**
- * Instantiates a session based on an IAM Role specified in your AWS Config under
- * ~/.aws/config.
- * The role ARN needs to be the same as has been allocated under your config and the
- * sessionName is arbitrary. This is a promisfied function that will instantiate a new
- * session in case a pre-existing one does not already exist.
- *
- * @param roleArn The role ARN (Amazon Resource Number) specified in your ~/.aws/Config file
- * @param sessionName The name of the session that will be allocated. This is arbitrary.
- * @param options This can include any other options for your session. Ex. "region"
- */
-// const createRoleSession = (roleARN, sessionName, options = null) => {
-//   console.log('Instantiating Role Session', roleARN, sessionName, options)
-//   const updateConfigForOptions = (opt) => {
-//     if (!isNullOrUndefined(options)) {
-//       AWS.config.update(options)
-//     }
-//   }
-
-//   // Update the AWS config for the provided options
-//   updateConfigForOptions(options)
-
-//   if (isNullOrUndefined(session)) {
-//     return new Promise((resolve, reject) => {
-//       session = new AWS.STS()
-//       session.assumeRole({
-//         RoleArn: roleARN,
-//         RoleSessionName: sessionName
-//       }).promise().then((data) => {
-//         AWS.config.update({
-//           accessKeyId: data.Credentials.AccessKeyId,
-//           secretAccessKey: data.Credentials.SecretAccessKey,
-//           sessionToken: data.Credentials.SessionToken
-//         })
-
-//         resolve(session)
-//       }).catch(e => {
-//         reject(e)
-//       })
-//     })
-//   } else {
-//     return Promise.resolve(session)
-//   }
-// }
-
 const sessionManager = new AWSRoleSessionManager()
 
 /**
