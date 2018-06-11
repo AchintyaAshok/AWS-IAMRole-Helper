@@ -24,6 +24,7 @@ class AWSRoleSession {
    * Creates a new AWSRoleSession
    */
   createSession () {
+    console.log('Creating session...')
     const token = 'role/'
     const roleName = this.roleARN.substr(this.roleARN.indexOf(token) + token.length)
     this.sessionName = `${roleName}-aws-sdk`
@@ -82,24 +83,31 @@ class AWSRoleSessionManager {
       // Update the AWS config for the provided options
       updateConfigForOptions(options)
 
-      // Create or apply the activer ole
-      if (this.activeRoleSessions[roleARN]) {
-        const existingRoleSession = this.activeRoleSessions[roleARN]
-        this.assumeRoleInConfig(existingRoleSession.sessionData)
-        resolve(existingRoleSession.session)
-      } else {
-        // Create a new session
-        const newRoleSession = AWSRoleSession(roleARN)
-        newRoleSession.createSession()
-          .then((session) => {
-            // Store for future retrieval
-            this.activeRoleSessions[roleARN] = newRoleSession
-            this.assumeRoleInConfig(newRoleSession.sessionData)
-            resolve(newRoleSession)
-          })
-          .catch(e => {
-            reject(e)
-          })
+      try {
+        // Create or apply the activer ole
+        if (this.activeRoleSessions[roleARN]) {
+          console.log('Loading already instantiated session...')
+          const existingRoleSession = this.activeRoleSessions[roleARN]
+          this.assumeRoleInConfig(existingRoleSession.sessionData)
+          resolve(existingRoleSession.session)
+        } else {
+          // Create a new session
+          console.log(`Creating new AWSRoleSession with ARN [${roleARN}]...`)
+          const newRoleSession = new AWSRoleSession(roleARN)
+          newRoleSession.createSession()
+            .then((session) => {
+              // Store for future retrieval
+              this.activeRoleSessions[roleARN] = newRoleSession
+              this.assumeRoleInConfig(newRoleSession.sessionData)
+              resolve(newRoleSession)
+            })
+            .catch(e => {
+              reject(e)
+            })
+        }
+      } catch (thrownError) {
+        console.log('Unexpected Error', thrownError)
+        reject(thrownError)
       }
     })
   }
