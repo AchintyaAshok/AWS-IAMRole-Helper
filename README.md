@@ -1,5 +1,5 @@
-# AWS IAMROLE Helper
-This project builds off of the AWS SDK and makes it easier for you to instantiate an IAM Role Session for your SDK Needs. Once you have instantiated your role session using a simple command, you can go ahead and use the SDK to query for your resources.
+# AWS IAM Role Helper
+This project builds off of the AWS SDK and makes it easier for you to instantiate IAM Role Sessions for your SDK Needs. Once you have instantiated your role session using a simple command, you can go ahead and use the SDK to query for your resources.
 
 Instantiate Your Role Session:
 ```javascript
