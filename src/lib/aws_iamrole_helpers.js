@@ -2,7 +2,7 @@
  * All helper functions related to setting up the IAM Role credentialed session go here.
  */
 
-const AWS = require('AWS-sdk')
+// const AWS = require('AWS-sdk')
 
 /**
  * Returns whether the parameter is null or undefined.
@@ -13,7 +13,8 @@ const isNullOrUndefined = (d) => {
 }
 
 class AWSRoleSession {
-  constructor (roleARN) {
+  constructor (AWS, roleARN) {
+    this.AWS = AWS
     this.roleARN = roleARN
     this.sessionName = null
     this.session = null
@@ -25,21 +26,24 @@ class AWSRoleSession {
    */
   createSession () {
     console.log('Creating session...')
-    const token = 'role/'
-    const roleName = this.roleARN.substr(this.roleARN.indexOf(token) + token.length)
-    this.sessionName = `${roleName}-aws-sdk`
-
     return new Promise((resolve, reject) => {
-      this.session = new AWS.STS()
-      this.session.assumeRole({
-        RoleArn: this.roleARN,
-        RoleSessionName: this.sessionName
-      }).promise().then((data) => {
-        this.sessionData = data
-        resolve(this)
-      }).catch(e => {
+      try {
+        const token = 'role/'
+        const roleName = this.roleARN.substr(this.roleARN.indexOf(token) + token.length)
+        this.sessionName = `${roleName}-aws-sdk`
+        this.session = new this.AWS.STS()
+        this.session.assumeRole({
+          RoleArn: this.roleARN,
+          RoleSessionName: this.sessionName
+        }).promise().then((data) => {
+          this.sessionData = data
+          resolve(this)
+        }).catch(e => {
+          reject(e)
+        })
+      } catch (e) {
         reject(e)
-      })
+      }
     })
   }
 }
@@ -49,7 +53,8 @@ class AWSRoleSession {
  * roll sessions during the duration of the use of this library.
  */
 class AWSRoleSessionManager {
-  constructor () {
+  constructor (AWS) {
+    this.AWS = AWS
     this.activeRoleSessions = {}
   }
 
@@ -59,7 +64,8 @@ class AWSRoleSessionManager {
    * that should be used in the config.
    */
   assumeRoleInConfig (sessionData) {
-    AWS.config.update({
+    console.log('Assuming Role with Credentials', sessionData)
+    this.AWS.config.update({
       accessKeyId: sessionData.Credentials.AccessKeyId,
       secretAccessKey: sessionData.Credentials.SecretAccessKey,
       sessionToken: sessionData.Credentials.SessionToken
@@ -77,7 +83,7 @@ class AWSRoleSessionManager {
       const updateConfigForOptions = (opt) => {
         if (!isNullOrUndefined(opt)) {
           console.log('Updating config with options...', opt)
-          AWS.config.update(opt)
+          this.AWS.config.update(opt)
         }
       }
 
@@ -94,7 +100,7 @@ class AWSRoleSessionManager {
         } else {
           // Create a new session
           console.log(`Creating new AWSRoleSession with ARN [${roleARN}]...`)
-          const newRoleSession = new AWSRoleSession(roleARN)
+          const newRoleSession = new AWSRoleSession(this.AWS, roleARN)
           newRoleSession.createSession()
             .then((session) => {
               // Store for future retrieval
@@ -114,7 +120,7 @@ class AWSRoleSessionManager {
   }
 }
 
-const sessionManager = new AWSRoleSessionManager()
+let sessionManager = null
 
 /**
  * Instantiates a session based on an IAM Role specified in your AWS Config under
@@ -128,7 +134,10 @@ const sessionManager = new AWSRoleSessionManager()
  * assumed.
  * @returns {Promise} Promise which will assume the role and update the config to reflect it.
  */
-const assumeRole = (roleARN, options) => {
+const assumeRole = (AWS, roleARN, options) => {
+  if (isNullOrUndefined(sessionManager)) {
+    sessionManager = new AWSRoleSessionManager(AWS)
+  }
   return sessionManager.assumeRole(roleARN, options)
 }
 
