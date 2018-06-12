@@ -2,8 +2,6 @@
  * All helper functions related to setting up the IAM Role credentialed session go here.
  */
 
-// const AWS = require('AWS-sdk')
-
 /**
  * Returns whether the parameter is null or undefined.
  * @param {Any} d The parameter that should be checked for null or undefined
@@ -12,6 +10,10 @@ const isNullOrUndefined = (d) => {
   return !d || (d === null)
 }
 
+/**
+ * Definition of a RoleSession. This keeps track of everything from the roleARN being used to the
+ * name of the session and the stored data associated with the session.
+ */
 class AWSRoleSession {
   constructor (AWS, roleARN) {
     this.AWS = AWS
@@ -82,7 +84,6 @@ class AWSRoleSessionManager {
     return new Promise((resolve, reject) => {
       const updateConfigForOptions = (opt) => {
         if (!isNullOrUndefined(opt)) {
-          console.log('Updating config with options...', opt)
           this.AWS.config.update(opt)
         }
       }
@@ -120,6 +121,9 @@ class AWSRoleSessionManager {
   }
 }
 
+/**
+ * Singleton Session Manager for all aws-role stuff.
+ */
 let sessionManager = null
 
 /**
@@ -129,6 +133,8 @@ let sessionManager = null
  * sessionName is arbitrary. This is a promisfied function that will instantiate a new
  * session in case a pre-existing one does not already exist.
  *
+ * @param {AWS} AWS Pass in the reference to your imported AWS-sdk library here. This way all operations involved with
+ * assuming roles apply to your singleton instance of the AWS-sdk.
  * @param {String} roleARN The role ARN (Amazon Resource Number) specified in your ~/.aws/Config file
  * @param {Object} any other configuration options for the AWS SDK such as the region for which the role should be
  * assumed.

@@ -3,8 +3,9 @@ This project builds off of the AWS SDK and makes it easier for you to instantiat
 
 Instantiate Your Role Session:
 ```javascript
+const AWS = require('AWS-sdk') // Your top-level import of AWS-sdk
 const AWSRoleHelper = require('aws-iamrole-helper')
-AWSRoleHelper.assumeRole(your_role_ARN)
+AWSRoleHelper.assumeRole(AWS, your_role_ARN)
   .then(() => {
     // do your work here to query the SDK
   })
@@ -15,12 +16,12 @@ Assume multiple roles at the same time. AWSRoleHelper takes care of managing all
 const roleARNblue = 'Role ARN for some resource set blue'
 const roleARNred = 'Role ARN for some resource set red'
 
-AWSRoleHelper.assumeRole(roleARNBlue)
+AWSRoleHelper.assumeRole(AWS, roleARNBlue)
   .then(() => {
     // do something with BLUE resources
   })
 
-AWSRoleHelper.assumeRole(roleARNRed)
+AWSRoleHelper.assumeRole(AWS, roleARNRed)
   .then(() => {
     // do something with RED resources
   })
