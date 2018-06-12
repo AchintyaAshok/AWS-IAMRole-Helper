@@ -75,8 +75,9 @@ class AWSRoleSessionManager {
   assumeRole (roleARN, options) {
     return new Promise((resolve, reject) => {
       const updateConfigForOptions = (opt) => {
-        if (!isNullOrUndefined(options)) {
-          AWS.config.update(options)
+        if (!isNullOrUndefined(opt)) {
+          console.log('Updating config with options...', opt)
+          AWS.config.update(opt)
         }
       }
 
