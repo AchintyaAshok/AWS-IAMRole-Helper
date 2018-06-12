@@ -28,7 +28,5 @@
     "url": "https://github.com/AchintyaAshok/AWS-IAMRole-Helper/issues"
   },
   "homepage": "https://github.com/AchintyaAshok/AWS-IAMRole-Helper#readme",
-  "dependencies": {
-    "aws-sdk": "^2.253.1"
-  }
+  "dependencies": {}
 }
